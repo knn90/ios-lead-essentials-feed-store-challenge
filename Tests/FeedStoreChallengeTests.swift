@@ -6,12 +6,21 @@ import XCTest
 import FeedStoreChallenge
 
 class InMemoryFeedStore: FeedStore {
+    private struct Cache {
+        let feed: [LocalFeedImage]
+        let timestamp: Date
+    }
+    
+    private var cache: Cache?
+    
     func deleteCachedFeed(completion: @escaping DeletionCompletion) {
         
     }
     
     func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
         
+        cache = Cache(feed: feed, timestamp: timestamp)
+        completion(nil)
     }
     
     func retrieve(completion: @escaping RetrievalCompletion) {
@@ -58,9 +67,9 @@ class FeedStoreChallengeTests: XCTestCase, FeedStoreSpecs {
 	}
 
 	func test_insert_deliversNoErrorOnEmptyCache() {
-//		let sut = makeSUT()
-//
-//		assertThatInsertDeliversNoErrorOnEmptyCache(on: sut)
+		let sut = makeSUT()
+
+		assertThatInsertDeliversNoErrorOnEmptyCache(on: sut)
 	}
 
 	func test_insert_deliversNoErrorOnNonEmptyCache() {
